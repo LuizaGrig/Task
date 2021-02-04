@@ -21,11 +21,12 @@ Route::post('/back', 'SpaController@back');
 
 
 
-
-Route::post('/admin', 'TaskController@create')->middleware('login');
+Route::post('/admin', 'TaskController@create');
 Route::get('/task', 'TaskController@getTasks');
+
+
 Route::get('/tasksList', 'TaskController@getTasksList');
 Route::get('/users/', 'TaskController@getUsers');
 Route::post('/remove/{id}', 'TaskController@remove');
-Route::post('/update/{id}', 'TaskController@update');
+Route::get('/update/{id}', 'TaskController@update');
 

@@ -24,7 +24,7 @@ class SpaController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('name','email', 'password');
+        $credentials = $request->only('email', 'password');
         if ($token = $this->guard()->attempt($credentials)) {
             return response()->json(['status' => 'success'], 200)->header('Authorization', $token);
         }

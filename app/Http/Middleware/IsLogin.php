@@ -16,12 +16,25 @@ class IsLogin
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::user()->isAdmin === 1) {
-            return $next($request);
-        }
-        else {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
+//        if(Auth::attempt(array('email' => $request->email, 'password' =>$request->password))){
+//            return response()
+//                ->json([
+//                    'authenticated' => true
+//                ]);
+//            if(Auth::attempt(['email' => $request->email, 'password' => $request->password, 'isAdmin' => '1'])){
+//                $user = Auth::user();
+//                return $next($request);
+//            }
+
+//        if(Auth::user()->isAdmin === 1) {
+//            return $next($request);
+//        }
+//        else {
+//            return response()->json(['error' => 'Unauthorized'], 403);
+//        }
     }
+
+
+
 
 }

@@ -35,34 +35,30 @@
                             </span>
                             </div>
                             <textarea id="description"  class="form-control bg-white border-left-0 border-md"
-                                       name="description"
-                                       placeholder="Enter a Task's Description" type="description" v-model="form.description">
+                                      name="description"
+                                      placeholder="Enter a Task's Description" type="description" v-model="form.description">
                             </textarea>
 
-</div>
-                        <!-- Assign -->
+                        </div>
+                        <!--                        Assign User-->
+
                         <div class="input-group col-lg-8 mb-4">
                             <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                            </span>
                             </div>
-                            <div>
-
-<!--                                Multiselect-->
-                                <multiselect id="assign"
-                                             v-model="form.assign"
-                                             :options="options"
-                                             :clear-on-select="false"
-                                             :close-on-select="false"
-                                             :multiple="true"
-                                             :preselect-first="true" :preserve-search="true"
-                                             class="form-control bg-white border-left-0 border-md"
-                                             name="value" track-by="name">
-                                    <option v-for="option in options"> {{ option.name }}</option>
-                                </multiselect>
-
+                            <multiselect
+                                v-model="userIds"
+                                :multiple="true"
+                                v-bind:options="users"
+                                label="name"
+                                track-by="id"
+                                @input="updateApprovers"
+                                placeholder="Assign a User">
+                                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                                  <i class="fa fa-user" aria-hidden="true"></i>
+                            </span>
+                            </multiselect>
                         </div>
+
 
                         <!-- Login Button -->
                         <div class="input-group col-lg-8 mb-4" >
@@ -79,9 +75,6 @@
                     </div>
                 </div>
             </div>
-
-
-</div>
         </div>
     </div>
 </template>
@@ -91,16 +84,17 @@
 import Multiselect from 'vue-multiselect'
 
 export default {
-    components: Multiselect,
+    components: { Multiselect },
     data() {
         return {
             users: [],
-            options: [],
             form:{
                 title: "",
                 description: "",
-                assign: ""
+                userID: ""
             },
+            userIds: [],
+            approvers: [],
 
         }
     },
@@ -112,18 +106,25 @@ export default {
             axios.get('api/users')
                 .then(response=>{
                     this.users = response.data
-                    this.options = response.data
                 })
                 .catch(error => {
                     console.log(error);
                 })
         },
+        updateApprovers(users) {
+            let approvers = [];
 
+            users.forEach((user) => {
+                approvers.push(this.userIds);
+            });
+            this.approvers = approvers;
+        },
         submit() {
+            console.log(this.approvers);
             axios({
                 method: 'post',
                 url: '/api/admin',
-                data: this.form
+                data: {userID: this.approvers, title: this.form.title, description: this.form.description}
             }).then(() => {
                 this.$router.push({name: "task"});
             });
@@ -138,4 +139,4 @@ export default {
 }
 </script>
 
-
+<style src="vue-multiselect/dist/vue-multiselect.min.css">
