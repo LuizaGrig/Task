@@ -48,38 +48,35 @@ class TaskController extends Controller
 
     public function update(Request $request, $id)
 
-
     {
-        dd($request->all());
+        $task = Task::find($id);
+        $task = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'userID' => 'required'
+        ]);
+//        $task->update($request->all());
 
+        $task = DB::table('tasks')->where('id', $id)->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'userID' => $request->userID
+        ]);
 
-//        $this->validate($request, [
-//            'title' => 'required',
-//            'description' => 'required',
-//            'userID' => 'required',
-//        ]);
+        return "The task has been updated";
+    }
 
-//        $user = Task::find($id);
-
-//        $user->update($request->all());
+    public function getTasksList()
+    {
+//        $users = DB::table('users')
+//            ->where('active', true)
+//        ->get();
+//dd($users);
 //
-//        $updateTask = DB::table('tasks')->where('id', $id)->update([
-//            'title' => $request->title,
-//            'description' => $request->description,
-//            'userID' => $request->userID
-//        ]);
-//        if ($updateTask) {
-//            $updateTask->save();
-//            return 'Task has been updated';
-//        }
-//        return "The task not found";
+        $task = Task::with('users')
+            ->select('tasks.title', 'tasks.description', 'tasks.userID')
+//            ->where('userID', '=', 'user_id')
+            ->get();
+        dd( $task);
     }
-
-
-    public function getTasksList($id){
-        $user = User::find($id); //user-i id-ov role
-        $tasks= $user->tasks;
-        return $tasks;
-    }
-
 }

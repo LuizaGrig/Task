@@ -11,6 +11,8 @@
                             <div class="input-group col-lg-8 mb-4">
                                 <div class="input-group-prepend">
                                 </div>
+                            </div>
+                            <div>
                                 <h1>Create An Account</h1>
                             </div>
 
@@ -65,8 +67,8 @@
                             </div>
 
                             <!-- Login Button -->
-                            <div class="input-group col-lg-8 mb-4" @click="formSubmit">
-                                <button class="btn btn-primary btn-block py-2" >Login</button>
+                            <div class="input-group col-lg-7 mb-4" @click="formSubmit">
+                                <button class="btn btn-primary btn-block py-2">Login</button>
                             </div>
 
 

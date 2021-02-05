@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 ;
 
 //
-Route::get('/rel', [\App\Http\Controllers\RelationsController::class, 'index']);
+Route::get('/rel', [\App\Http\Controllers\TaskController::class, 'getTasksList']);
 
 
 Route::get('/{any}', function (){

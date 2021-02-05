@@ -1,89 +1,93 @@
 <template>
     <div>
-        <h2 class="text-center mb-2 " >Task Management System</h2>
-        <table class="table">
-            <tbody>
-            <tr>
-                <td scope="col"></td>
-                <td scope="col"></td>
-                <td scope="col"></td>
-            </tr>
-
-                <tr v-for="task in tasks">
-                    <td>{{ task.title }}</td>
-                    <td>{{ task. description }}</td>
-                    <td>{{ task. userID }}</td>
-                    <button @click="remove(task.id)" class="trashcan">
-                        <i class="fa fa-trash" aria-hidden="true" style="color: #761b18"></i>
-                    </button>
-                    <div  @click="showModal = true">
-                        <button>
-                            <i class="fa fa-list-alt" aria-hidden="true" style="color: #556B2F"></i>
-                        </button>
-                    </div>
+        <h2 class="text-center mb-2 ">Task Management System</h2>
+        <div class="container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <td scope="col"><h5>Task Title</h5></td>
+                    <td scope="col"><h5>Task Description</h5></td>
+                    <td scope="col"><h5>Assign User</h5></td>
+                    <td scope="col"></td>
                 </tr>
-            </tbody>
+                </thead>
+                <tbody>
+                <tr v-for="task in tasks" :key="task.id">
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.userID }}</td>
+                <td>
 
+                     <button class="btn btn-danger" data-toggle="button"
+                             aria-pressed="false"
+                             @click="remove(task.id)" > Delete
+                    </button>
 
-            <router-link :to="{ name: 'admin'}" class="text-primary ml-2">Back</router-link>
-        </table>
+                    <button :data-target=" '#myModal' + task.id" data-toggle="button"
+                            aria-pressed="false"
+                            class="btn btn-success m-1"
+                            @click="showModal = true">Edit
+                    </button>
 
-<!--        ShowModal-part-->
+                    <router-link :to="{ name: 'admin'}"
+                                 class="btn btn-primary"
+                                 data-toggle="button"
+                                 aria-pressed="false"
+                                 autocomplete="off">Back
+                    </router-link>
+                </td>
 
-        <div class="test">
-            <div class="modal-fade">
-                <transition name="fade">
-                    <div class="modal-overlay" v-if="showModal" @click="showModal = false"></div>
-                </transition>
-
-
-            </div>
-
-            <transition name="slide" v-if="showModal" >
-                <div @click.stop>
-                    <div>
-                        <div class="form-group" >
-                            <textarea type="title" class="form-control" id="title"
-                                      aria-describedby="emailHelp"
+                <!--        ShowModal-part-->
+                <div class="test">
+                    <div :id=" 'myModal' + task.id" class="modal-fade">
+                        <transition name="fade">
+                            <div v-if="showModal" class="modal-overlay" @click="showModal = false"
+                            ></div>
+                        </transition>
+                    </div>
+                    <transition v-if="showModal" name="slide">
+                        <div @click.stop>
+                            <div v-for="task in tasks">
+                                <div class="form-group">
+                            <textarea id="title" v-model="form.title" class="form-control p-4"
                                       name="title"
                                       placeholder="Enter Task Title"
-                                      v-model="form.title"
-                            >   </textarea>
+                                      type="title">
+                            </textarea>
 
-                        </div>
-
-                        <div class="form-group">
-                            <textarea type="description" class="form-control"
-                                      id="description" placeholder="Description"
+                                </div>
+                                <div class="form-group">
+                            <textarea id="description" v-model="form.description"
+                                      class="form-control p-4"
                                       name="description"
-                                      v-model="form.description"
-                            >  </textarea>
-                        </div>
+                                      type="description">
+                            </textarea>
+                                </div>
 
-                        <div class="form-group">
-                            <textarea type="assign"
-                                      class="form-control"
-                                      id="assign"
-                                      placeholder="Assign a User"
+
+                                <div class="form-group">
+                            <textarea id="assign"
                                       v-model="form.userID"
-                            ></textarea>
+                                      class="form-control p-4"
+                                      placeholder="Assign a User"
+                                      type="assign">
+                            </textarea>
+                                </div>
+
+                                <button
+                                    class="btn btn-primary" type="submit" @click="update(task.id)">Submit
+                                </button>
+                                <button class="btn btn-primary" @click="showModal = false"> Close Modal</button>
+                            </div>
                         </div>
-
-                        <button v-for="task in tasks"
-                            type="submit" class="btn btn-primary" @click="update(task.id)">Submit</button>
-                        <button class="btn btn-primary" @click="showModal = false"> Close Modal</button>
-                    </div>
+                    </transition>
                 </div>
-            </transition>
-
-
+            </tr>
+                </tbody>
+        </table>
         </div>
-
-
-
     </div>
 </template>
-
 <script>
 
 export default {
@@ -91,65 +95,61 @@ export default {
         return{
             tasks:[],
             users: [],
-            showModal: true,
+            showModal: false,
             form: {
                 title: "",
                 description: "",
                 userID: ""
-            }
+            },
         }
     },
-methods:{
-    // openModal(id){
-    //         // console.log(id)
-    //     },
-   getList(){
-       axios.get('api/task')
-   .then(response=>{
-       this.tasks = response.data
-   })
-   .catch(error => {
-       console.log(error);
-   })
-   },
-    getUsersList(){
-        axios.get('api/users')
-            .then(response=>{
-                this.users = response.data
-            })
-            .catch(error => {
+    methods:{
+        update(id){
+            axios({
+                method: 'put',
+                url: '/api/update/' + id,
+                data: this.form
+            }).then(() => {
+                this.showModal = false;
+                this.$emit('TaskChanged');
+            });
+        },
+        getList(){
+            axios.get('api/task')
+                .then(response=>{
+                    this.tasks = response.data
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        getUsersList(){
+            axios.get('api/users')
+                .then(response=>{
+                    this.users = response.data
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        remove(id){
+            axios.post('/api/remove/' + id)
+                .then(response => {
+                    if(response.status == 200){
+                        this.$emit('TaskChanged');
+                    }
+                }).catch(error => {
                 console.log(error);
             })
+        },
     },
-    remove(id){
-        axios.post('/api/remove/' + id)
-            .then(response => {
-                if(response.status == 200){
-                    this.$emit('TaskChanged');
-                }
-            }).catch(error => {
-            console.log(error);
-        })
-    },
-    update(id){
-        axios({
-            method: 'get',
-            url: '/api/update' + id,
-            data: this.form
-        }).then(() => {
-            this.$router.push({name: "login"});
-        });
-    }
-},
     created() {
         this.getList();
         this.getUsersList();
     }
 }
 </script>
-
-
-<style>
+<style scoped>
 .modal-overlay{
     position: absolute;
     top: 0;
@@ -174,25 +174,38 @@ methods:{
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 99;
-
     width: 30vw;
     background-color: transparent;
     border-radius: 25px;
     padding: 25px;
-    height: 60vh;
+    height: 90vh;
 }
 .btn-primary{
     margin: 5px;
     padding: 5px
 }
-
-.label{
-    color: #222;
-    font-size: 16px;
-    font-weight: 900;
-    margin-bottom: 10px;
-}
+/*table{*/
+/*    border: 1px solid black;*/
+/*}*/
+/*tr{*
+/*    border: 1p'x solid black;*/
+/*}*/
+/*tbody{*/
+/*    border: 1px solid black;*/
+/*}*/
 .text-center{
     color: #1b4b72;
 }
+.container{
+    padding: 25px;
+}
+td{
+    border: 1px solid black;
+}
+/*thead{*/
+/*    background-color: #ffa500;*/
+/*}*/
+/*tbody{*/
+/*    background-color: #f5f5dc;*/
+/*}*/
 </style>

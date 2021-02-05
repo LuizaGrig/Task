@@ -2,7 +2,7 @@
     <div>
         <h1 class="text-center" style="color: #06567B">Create a New Task</h1>
         <div class="container">
-            <div class="row py-5 mt-4 align-items-center">
+            <div class="row py-5 mt-3 align-items-center">
                 <div class="col-md-6 pr-lg-12 mb-12 mb-md-0">
                     <img alt="" class="img-fluid mb-2 d-none d-md-block"
                          src="./../views/images/img4.jpg">
@@ -117,10 +117,12 @@ export default {
             users.forEach((user) => {
                 approvers.push(this.userIds);
             });
-            this.approvers = approvers;
+            this.approvers = JSON.parse;
+
+            console.log(typeof (this.approvers));
         },
         submit() {
-            console.log(this.approvers);
+            console.log(this.userID);
             axios({
                 method: 'post',
                 url: '/api/admin',

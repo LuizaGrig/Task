@@ -83,7 +83,7 @@ import Registration from './components/views/registration/Registration'
 import AdminComponent from './components/welcome/AdminComponent'
 import TaskComponent from './components/welcome/TaskComponent'
 import UserComponent from './components/welcome/UserComponent'
-import UpdateComponent from './components/welcome/UpdateComponent'
+
 
 
 
@@ -117,12 +117,8 @@ const router = new VueRouter({
             path: '/user',
             name: 'user',
             component: UserComponent,
-        },
-        {
-            path: '/update',
-            name: 'update',
-            component: UpdateComponent,
         }
+
     ],
 });
 

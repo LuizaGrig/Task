@@ -28,5 +28,5 @@ Route::get('/task', 'TaskController@getTasks');
 Route::get('/tasksList', 'TaskController@getTasksList');
 Route::get('/users/', 'TaskController@getUsers');
 Route::post('/remove/{id}', 'TaskController@remove');
-Route::get('/update/{id}', 'TaskController@update');
+Route::put('/update/{id}', 'TaskController@update');
 
